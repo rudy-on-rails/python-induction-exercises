@@ -9,16 +9,14 @@ class AttitudinalEquity(object):
 
   def calculate(self):
     ranking_per_respondent = self.ranking_per_respondent();
+    # print  ranking_per_respondent[0]
+    # exit()
     for ranking in ranking_per_respondent:
       ranks_sum = 0
       for brand_rating in ranking:
-        if brand_rating['rank']:
-          ranks_sum += 1 / brand_rating['rank']
+        ranks_sum += 1 / brand_rating['rank']
       for brand_rating in ranking:
-        if brand_rating['rank']:
-          attitudinal_equity = 1 / (brand_rating['rank'] * ranks_sum)
-        else:
-          attitudinal_equity = 0.0
+        attitudinal_equity = 1 / (brand_rating['rank'] * ranks_sum)
         brand_rating['attitudinal_equity'] = attitudinal_equity
     return ranking_per_respondent
 
@@ -32,7 +30,7 @@ class AttitudinalEquity(object):
         respondent_data.append({
           'rating': brands_rated[0],
           'brands': brands,
-          'rank': sum(xrange(start_pos, start_pos + len(brands))) / len(brands) if brands_rated[0] else 0
+          'rank': sum(xrange(start_pos, start_pos + len(brands))) / len(brands)
         })
         start_pos+=1
       rankings.append(respondent_data)

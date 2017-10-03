@@ -9,12 +9,11 @@ class AttitudinalEquity(object):
 
   def calculate(self):
     ranking_per_respondent = self.ranking_per_respondent();
-    # print  ranking_per_respondent[0]
-    # exit()
     for ranking in ranking_per_respondent:
       ranks_sum = 0
       for brand_rating in ranking:
-        ranks_sum += 1 / brand_rating['rank']
+        for brand in brand_rating['brands']:
+          ranks_sum += 1 / brand_rating['rank']
       for brand_rating in ranking:
         attitudinal_equity = 1 / (brand_rating['rank'] * ranks_sum)
         brand_rating['attitudinal_equity'] = attitudinal_equity
@@ -32,7 +31,7 @@ class AttitudinalEquity(object):
           'brands': brands,
           'rank': sum(xrange(start_pos, start_pos + len(brands))) / len(brands)
         })
-        start_pos+=1
+        start_pos+=len(brands)
       rankings.append(respondent_data)
     return rankings
 
@@ -93,7 +92,7 @@ class MRCalculator(object):
     self.filepath = filepath
 
   def calculate_attitudinal_equity(self):
-    range_of_columns = xrange(118,125)
+    range_of_columns = xrange(118,126)
     with open(self.filepath, 'rb') as csvfile:
       brand_names_pattern = re.compile('""(\w|\W)+""')
       csv_reader = csv.reader(csvfile, delimiter=',', quotechar='|')
@@ -109,7 +108,7 @@ class MRCalculator(object):
           respondent_ratings.append(BrandRating(brands[count], row[x]))
           count+=1
         respondent_branding_performances.append(RespondentBrandsRating(respondent_ratings))
-      print AttitudinalEquity(respondent_branding_performances).calculate()
+      print AttitudinalEquity(respondent_branding_performances).calculate()[0]
 
 calculator = MRCalculator('./responses.csv')
 calculator.calculate_attitudinal_equity()

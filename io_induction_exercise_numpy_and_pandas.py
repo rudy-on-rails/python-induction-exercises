@@ -10,7 +10,7 @@ class MRCalculator(object):
     self.filepath = filepath
 
   def calculate_attitudinal_equity(self):
-    range_of_columns = xrange(118,125)
+    range_of_columns = xrange(118,126)
     with open(self.filepath, 'rb') as csvfile:
       brand_names_pattern = re.compile('""(\w|\W)+""')
       csv_reader = csv.reader(csvfile, delimiter=',', quotechar='|')
@@ -24,7 +24,7 @@ class MRCalculator(object):
         respondent_ratings = []
         for x in range_of_columns:
           if row[x]:
-            respondent_ratings.append(float(row[x]))
+            respondent_ratings.append(row[x])
           else:
             respondent_ratings.append(0)
         respondent_data.append(respondent_ratings)
@@ -32,7 +32,7 @@ class MRCalculator(object):
       ndranks = np.array(ranks)
       ndarray_respondent_ratings = np.array(respondent_data)
       ranks_sum_divided = (1 / ndranks).sum(axis=1)
-      equity = 1 / (ndranks * np.split(np.repeat(ranks_sum_divided, 7), len(ranks_sum_divided)))
+      equity = 1 / (ndranks * np.split(np.repeat(ranks_sum_divided, 8), len(ranks_sum_divided)))
       print equity[0]
 
 calculator = MRCalculator('./responses.csv')
